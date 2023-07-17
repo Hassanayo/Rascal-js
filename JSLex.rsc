@@ -36,6 +36,7 @@ keyword Reserved
                 | "in"
                 | "new"
                 | "try"
-                | "catch"                
+                | "catch"               
+                | "import" 
                 ;
 
