@@ -1,1 +1,4 @@
-let hello = 5;
+function Date(){
+  var name = Hello;
+  var age = 20
+}

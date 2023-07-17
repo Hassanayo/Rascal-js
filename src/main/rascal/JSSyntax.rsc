@@ -2,12 +2,23 @@ module JSSyntax
 
 extend JSLex;
 
-start syntax Stmt = varstatement: VariableStmt;
-start syntax Decl = vardeclaration: VariableDecl;
+start syntax Source = varstatement: Statement;
 
-syntax VariableStmt = variableStatement: "var" {VariableDecl ","}+ SemiColon?;
+
+start syntax Source
+    = source: Statement statements
+    ;
+syntax Statement 
+    = varDecl: VariableStmt
+    | block: "{" Statement* "}"
+    | function: Function function
+    ;
+
+syntax VariableStmt = variableStatement: Declarator {VariableDecl ","}+ SemiColon?;
 syntax VariableDecl = varDeclaration: Id Initialize?;
 syntax Initialize = initialize: "=" Exp;
+
+syntax Function = "function" Id name "(" {Id ","}* parameters ")" "{" Statement* statements "}";
 
 start syntax Exp
               = var: Id

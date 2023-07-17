@@ -12,9 +12,12 @@ lexical String = [\"] StringChar* [\"];
 lexical StringChar = ![\\ \" \n] | "\\" [\\ \"];
 lexical Let = "let";
 lexical Const = "const";
+lexical Var = "var";
 lexical SemiColon = ";";
 lexical Boolean = "true" | "false";
 lexical NewLine = "\r\n" | "\r\t";
+
+lexical Declarator = Let | Const | Var;
 
 keyword ReservedKeywords
                 = "true"
