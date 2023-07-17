@@ -1,9 +1,9 @@
-module TSLex
+module JSLex
 
 extend lang::std::Layout;
 
 //Must start with a letter followed by letters or numbers and must not be followed by another character. Also must not be a keyword
-lexical Id = ([a-z A-Z][a-z A-Z 0-9]* !>> [a-z A-Z 0-9]) \ Keyword;
+lexical Id = ([a-z A-Z][a-z A-Z 0-9]* !>> [a-z A-Z 0-9]) \ ReservedKeywords;
 
 lexical Integer = [0-9] !<< [0-9]+ !>> [0-9];
 
@@ -16,7 +16,7 @@ lexical SemiColon = ";";
 lexical Boolean = "true" | "false";
 lexical NewLine = "\r\n" | "\r\t";
 
-keyword Reserved
+keyword ReservedKeywords
                 = "true"
                 | "false"
                 | "null"
