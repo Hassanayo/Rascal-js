@@ -1,4 +1,6 @@
-function Date(){
-  var name = Hello;
-  var age = 20
+{
+  var name = 5
+  for(var i = 0; i = 20; i = i + 1 ){
+
+  }
 }

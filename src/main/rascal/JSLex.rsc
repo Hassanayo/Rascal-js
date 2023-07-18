@@ -16,6 +16,7 @@ lexical Var = "var";
 lexical SemiColon = ";";
 lexical Boolean = "true" | "false";
 lexical NewLine = "\r\n" | "\r\t";
+lexical Null = "null"; 
 
 lexical Declarator = Let | Const | Var;
 
