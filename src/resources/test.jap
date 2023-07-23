@@ -1,4 +1,1 @@
-var name = "ayo"
-for(let i = 0; i <= 20; i = i +1){
-  
-}
+let name = 1;

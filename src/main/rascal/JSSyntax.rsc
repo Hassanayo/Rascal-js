@@ -1,16 +1,12 @@
 module JSSyntax
 
 extend JSLex;
-
-start syntax Source = varstatement: Statement;
-
-
 start syntax Source
-    = source: Statement* statements 
+    = source: Statement* statement
     ;
 syntax Statement 
     = varDecl: VariableStmt 
-    | block: "{" Statement* statements "}"
+    | block: "{" Statement* statement "}"
     | function: Function function
     | ifThen: "if" "(" Exp cond ")" Statement body () !>> "else"
     | ifElse: "if" "(" Exp cond ")" Statement body () "else" Statement elseBody
