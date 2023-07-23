@@ -34,10 +34,13 @@ start syntax Exp
               | integer: Integer
               | string: String
               | function: Function
-              > left lt: Exp lhs "\<" Exp rhs
-              > left gt: Exp lhs "\>" Exp rhs
-              > left leq: Exp lhs "\<=" Exp rhs
-              > left geq: Exp lhs "\>=" Exp rhs
+              | array: "[" {Exp ","}* "]"
+              | object: "{" {(Id ":" Exp) ","}* "}"
+              > postIncr: Exp "++"
+              | postDecr: Exp "--"
+              > preIncr: "++" Exp
+              | preDecr: "--" Exp
+              | not: "!" Exp
               > left (
                     mul: Exp lhs "*" Exp rhs
                   | div: Exp lhs "/" Exp rhs
