@@ -2,11 +2,12 @@ module JSSyntax
 
 extend JSLex;
 start syntax Source
-    = source: Statement* statement
+    = source: Statement* 
     ;
 syntax Statement 
-    = varDecl: VariableStmt 
-    | block: "{" Statement* statement "}"
+    = varStmt: VariableStmt 
+    | expression: Exp
+    | block: "{" Statement* "}"
     | function: Function function
     | ifThen: "if" "(" Exp cond ")" Statement body () !>> "else"
     | ifElse: "if" "(" Exp cond ")" Statement body () "else" Statement elseBody
@@ -16,7 +17,7 @@ syntax Statement
     | throwExp: "throw" Exp
     ;
 
-syntax VariableStmt = variableStatement: Declarator? {VariableDecl ","}+ ;
+syntax VariableStmt = variableStatement: Declarator {VariableDecl ","}+ ;
 syntax VariableDecl = varDeclaration: Id Initialize?;
 syntax Initialize = initialize: "=" Exp;
 
