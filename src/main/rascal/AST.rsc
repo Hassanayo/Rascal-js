@@ -5,6 +5,7 @@ import JSSyntax;
 
 data Source = source(list[Statement] statements);
 
+
 data Statement = varStmt(VariableStmt varSmt)
                 | expression(Exp newexp)
                 | function(Function function)
@@ -15,6 +16,7 @@ data Statement = varStmt(VariableStmt varSmt)
 data VariableStmt = variableStatement(str declarator, list[VariableDecl] vdecl);
 data VariableDecl = varDeclaration(str id, list[Initialize] init);
 data Initialize = initialize(Exp intexp);
+data Function = funcStmt(str funcid, list[Exp] funcparams, list[Statement] funcBody);
 
 data Exp = 
             var(str id)

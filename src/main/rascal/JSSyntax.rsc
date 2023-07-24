@@ -6,7 +6,6 @@ start syntax Source
     ;
 syntax Statement 
     = varStmt: VariableStmt 
-    | expression: Exp
     | block: "{" Statement* "}"
     | function: Function function
     | ifThen: "if" "(" Exp cond ")" Statement body () !>> "else"
