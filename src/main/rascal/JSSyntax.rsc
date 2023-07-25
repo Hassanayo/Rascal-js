@@ -5,11 +5,11 @@ start syntax Source
     = source: Statement* 
     ;
 syntax Statement 
-    = varStmt: VariableStmt 
+    = varStmt: VariableStmt
     | block: "{" Statement* "}"
     | expression: Exp!function expression
     | function: Function function
-    | ifThen: "if" "(" Exp cond ")" Statement body () !>> "else"
+    | ifThen: "if" "(" Exp cond ")" "{" Statement "}" body () !>> "else"
     | ifElse: "if" "(" Exp cond ")" Statement body () "else" Statement elseBody
     | forLoop: "for" "(" VariableStmt init ";" Exp cond ";" Exp cond ")" Statement forBody
     | forIn: "for" "(" VariableStmt "in" Exp ")" Statement

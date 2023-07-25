@@ -1,4 +1,3 @@
-var name = {
-  "name": Ayo,
-  "age": 21
+if(name = 20){
+ name = 10
 }
