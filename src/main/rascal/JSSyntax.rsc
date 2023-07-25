@@ -7,6 +7,7 @@ start syntax Source
 syntax Statement 
     = varStmt: VariableStmt 
     | block: "{" Statement* "}"
+    | expression: Exp!function expression
     | function: Function function
     | ifThen: "if" "(" Exp cond ")" Statement body () !>> "else"
     | ifElse: "if" "(" Exp cond ")" Statement body () "else" Statement elseBody
@@ -22,16 +23,16 @@ syntax Initialize = initialize: "=" Exp;
 
 syntax Function = 
                 function: "function" Id name "(" {Id ","}* parameters ")" "{" Statement* statements "}"
-                | Declarator Id name "=" "(" {Id ","}* parameters ")" "=\>" "{" Statement* statements  "}"
+                // | Declarator Id name "=" "(" {Id ","}* parameters ")" "=\>" "{" Statement* statements  "}"  "(" {Id ","}* parameters ")" "{" Statement* statements "}"
                 ;
 
+syntax PropertyAssignment =propertyAssgn: Exp ":" Exp;
 start syntax Exp
               = var: Id
               | integer: Integer
               | string: String
-              | function: Function
               | array: "[" {Exp ","}* "]"
-              | object: "{" {(Id ":" Exp) ","}* "}"
+              | object: "{" {PropertyAssignment ","}* "}"
               > postIncr: Exp "++"
               | postDecr: Exp "--"
               > preIncr: "++" Exp

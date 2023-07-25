@@ -42,5 +42,6 @@ keyword ReservedKeywords
                 | "try"
                 | "catch"               
                 | "import" 
+                | "function" 
                 ;
 

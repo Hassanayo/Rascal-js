@@ -1,3 +1,4 @@
-function Name(){
-  
+var name = {
+  "name": Ayo,
+  "age": 21
 }
