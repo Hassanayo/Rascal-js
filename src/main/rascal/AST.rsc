@@ -9,9 +9,12 @@ data Source = source(list[Statement] statements);
 data Statement = varStmt(VariableStmt varSmt)
                 | expression(Exp newexp)
                 | function(Function function)
+                | ifThen(Exp exp, Statement ifstmt)
+                | ifElse(Exp exp, Statement ifstmt, list[Statement] elsestmt)
+                | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, list[Statement] forbody)
+                | forIn(VariableStmt stmt, Exp exp, list[Statement] forinstmt )
                 | returnExp(Exp retExp)
                 | throwExp(Exp thrwExp)
-                | ifThen(Exp exp, Statement ifstmt)
                 ;
                 
 data VariableStmt = variableStatement(str declarator, list[VariableDecl] vdecl);
