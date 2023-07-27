@@ -10,18 +10,19 @@ data Statement = varStmt(VariableStmt varSmt)
                 | expression(Exp newexp)
                 | block(list[Statement] blockStmt)
                 | function(Function function)
-                // loops
+
+                // control statements
                 | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, list[Statement] forbody)
                 | forIn(VariableStmt stmt, Exp exp, list[Statement] forinstmt )
                 | whileLoop(Exp exp, list[Statement] whilebody)
                 | doWhile(list[Statement] doStmt, Exp exp)
-                
-                // control statements
                 | ifThen(Exp exp, Statement ifstmt)
                 | ifElse(Exp exp, Statement ifstmt, list[Statement] elsestmt)
                 | switchCase(Exp exp, list[CaseStatement] caseStmt)
+
                 | tryCatch(list[Statement] tryStmt, str id, list[Statement] catchStmt)
                 | tryFinally(list[Statement] tryStmt, list[Statement] finallyStmt)
+
                 
                 | breakLabel()
                 | continueLabel()
