@@ -9,12 +9,27 @@ syntax Statement
     | block: "{" Statement* "}"
     | expression: Exp!function expression
     | function: Function function
-    | ifThen: "if" "(" Exp cond ")" "{" Statement "}"  () !>> "else"
-    | ifElse: "if" "(" Exp cond ")" "{" Statement "}"  () "else" "{" Statement* "}" elseBody
+
+    // Loops
     | forLoop: "for" "(" VariableStmt init ";" Exp cond ";" Exp cond ")" "{" Statement* "}" forBody
     | forIn: "for" "(" VariableStmt "in" Exp ")" "{" Statement* "}"
+    | whileLoop: "while" "(" Exp ")" "{" Statement* "}" 
+    | doWhile: "do" "{" Statement* "}" "while" "(" Exp ")"
+
     | returnExp: "return" Exp
     | throwExp: "throw" Exp
+    | breakLabel: "break" ";"
+    | continueLabel: "continue" ";"
+
+    // control statements
+    | ifThen: "if" "(" Exp cond ")" "{" Statement "}"  () !>> "else"
+    | ifElse: "if" "(" Exp cond ")" "{" Statement "}"  () "else" "{" Statement* "}" elseBody
+    | switchCase: "switch" "(" Exp ")" "{" CaseStatement* "}"
+    | tryCatch: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}"
+    | tryFinally: "try" "{" Statement* "}" "finally" "{" Statement* "}"
+
+    // issue
+    | tryCatchFinally: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}" catchBody "finally"  Statement*  finallyBody
     ;
 
 syntax VariableStmt = variableStatement: Declarator {VariableDecl ","}+ ;
@@ -26,8 +41,10 @@ syntax Function =
                 // | Declarator Id name "=" "(" {Id ","}* parameters ")" "=\>" "{" Statement* statements  "}"  "(" {Id ","}* parameters ")" "{" Statement* statements "}"
                 ;
 
-syntax PropertyAssignment =propertyAssgn: Exp ":" Exp;
-start syntax Exp
+syntax PropertyAssignment = propertyAssgn: Exp ":" Exp;
+syntax CaseStatement = caseOf: "case" Exp ":" Statement*
+                    |  defaultCase: "default" ":" Statement*;
+syntax Exp
               = var: Id
               | integer: Integer
               | string: String

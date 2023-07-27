@@ -8,11 +8,23 @@ data Source = source(list[Statement] statements);
 
 data Statement = varStmt(VariableStmt varSmt)
                 | expression(Exp newexp)
+                | block(list[Statement] blockStmt)
                 | function(Function function)
-                | ifThen(Exp exp, Statement ifstmt)
-                | ifElse(Exp exp, Statement ifstmt, list[Statement] elsestmt)
+                // loops
                 | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, list[Statement] forbody)
                 | forIn(VariableStmt stmt, Exp exp, list[Statement] forinstmt )
+                | whileLoop(Exp exp, list[Statement] whilebody)
+                | doWhile(list[Statement] doStmt, Exp exp)
+                
+                // control statements
+                | ifThen(Exp exp, Statement ifstmt)
+                | ifElse(Exp exp, Statement ifstmt, list[Statement] elsestmt)
+                | switchCase(Exp exp, list[CaseStatement] caseStmt)
+                | tryCatch(list[Statement] tryStmt, str id, list[Statement] catchStmt)
+                | tryFinally(list[Statement] tryStmt, list[Statement] finallyStmt)
+                
+                | breakLabel()
+                | continueLabel()
                 | returnExp(Exp retExp)
                 | throwExp(Exp thrwExp)
                 ;
@@ -22,6 +34,11 @@ data VariableDecl = varDeclaration(str id, list[Initialize] init);
 data Initialize = initialize(Exp intexp);
 data Function = function(str funcid, list[str] funcparams, list[Statement] funcBody);
 data PropertyAssignment = propertyAssgn(str lhs, Exp rhs);
+data CaseStatement =  
+                      caseOf(Exp exp, list[Statement] caseBody)
+                    | defaultCase(list[Statement] caseBody)
+                    ;
+
 data Exp = 
             var(str id)
           | integer(int number)
