@@ -1,60 +1,25 @@
-# AST and JSSyntax GitHub Repository Readme
+# Rebuilding Javascript With Rascal MPL
 
-This GitHub repository contains two modules: `AST` and `JSSyntax`, which are used for working with Abstract Syntax Trees (ASTs) and parsing JavaScript (JS) syntax, respectively. The repository is meant to help with the manipulation of JavaScript code through AST representations and lexical analysis.
+This GitHub repository contains files needed to build the javascript language using Rascal MPL.
 
 ## Module: AST
 
-The `AST` module provides a data structure and algebraic data types (ADTs) to represent JavaScript Abstract Syntax Trees. It includes the following ADTs:
-
-### `Stmt`
-- `varstatement(VariableStmt varStmt)`: Represents a variable statement.
-
-### `Decl`
-- `vardeclaration(VariableDecl varDecl)`: Represents a variable declaration.
-
-### `VariableStmt`
-- `variableStatement(list[VariableDecl] vdecl, list[str] scolon)`: Represents a collection of variable declarations with optional semicolons.
-
-### `VariableDecl`
-- `variableDeclaration(str id, list[Initialize] init)`: Represents a variable declaration with an identifier and optional initializer.
-
-### `Initialize`
-- `initialize(Exp exp)`: Represents the initializer expression for a variable declaration.
-
-### `Exp`
-- `var(str id)`: Represents a variable reference.
-- `integer(int number)`: Represents an integer literal.
-- `string(str text)`: Represents a string literal.
-- `mult(Exp lhs, Exp rhs)`: Represents a multiplication operation between two expressions.
-- `add(Exp lhs, Exp rhs)`: Represents an addition operation between two expressions.
+The `AST` module provides a data structure and algebraic data types (ADTs) to represent JavaScript Abstract Syntax Trees.
 
 ## Module: JSSyntax
 
-The `JSSyntax` module extends the `JSLex` module, providing lexical analysis for JavaScript syntax. It includes the following lexical definitions:
+This module represents the syntax of the javascript language and these are the rules that describe the correctly structured programs in the javascript
 
-### Lexical Definitions
+## Module: JSLex
 
-- `Id`: Represents an identifier, starting with a letter and followed by letters or numbers. It must not be followed by another character and must not be a reserved keyword.
-- `Integer`: Represents an integer literal.
-- `String`: Represents a string literal enclosed within double quotes.
-- `Let`, `Const`, `Var`: Represents reserved keywords for variable declarations.
-- `SemiColon`: Represents the semicolon symbol.
-- `Boolean`: Represents the boolean literals "true" or "false".
-- `NewLine`: Represents newline characters.
-- `Null`: Represents the null literal.
-- `Declarator`: Represents the keywords "let", "const", or "var".
-- `ReservedKeywords`: Represents a list of reserved keywords in JavaScript.
+This module is the initial phase of the language processing pipeline which are the smallest units of the language and breaks the source code into individual tokens which is then passed/extended to the syntax.
 
-### Syntax Definitions
 
-The `JSSyntax` module defines the syntax for parsing JavaScript code. It includes the following syntax definitions:
+## Module: Parse
 
-- `Source`: Represents a JavaScript source file, starting with a `varstatement`.
-- `Statement`: Represents various types of JavaScript statements, such as variable declarations, blocks, functions, if-else statements, and for loops.
-- `VariableStmt`: Represents a statement containing multiple variable declarations.
-- `VariableDecl`: Represents a single variable declaration with an optional initializer.
-- `Initialize`: Represents the initialization expression for a variable declaration.
-- `Function`: Represents a JavaScript function definition.
-- `Exp`: Represents JavaScript expressions, including variable references, literals, and binary operations.
+Parse a javascript program from a string or file. It uses the syntax rules provided to parse a string and turn it into a parse tree. It uses the `parse` function provided by Rascal
 
-Please note that this README only provides an overview of the modules and their contents. For more detailed information, feel free to explore the code and documentation present in the repository. Happy coding!
+
+## Module: Load
+
+This module is used to parse the given string or file and convert it into an abstract syntax tree. It uses the `implode` function provided by Rascal to transform parse trees to abstract syntax trees
