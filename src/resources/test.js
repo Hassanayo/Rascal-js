@@ -16,3 +16,8 @@ try {
 } catch (error) {
   
 }
+
+let name = [1,]
+function Name(){
+
+}

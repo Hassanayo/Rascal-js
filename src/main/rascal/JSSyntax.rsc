@@ -48,7 +48,7 @@ syntax Exp
               = var: Id
               | integer: Integer
               | string: String
-              | array: "[" {Exp ","}* "]"
+              | array: "[" (Exp ",")* "]"
               | object: "{" {PropertyAssignment ","}* "}"
               > postIncr: Exp "++"
               | postDecr: Exp "--"

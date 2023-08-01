@@ -1,5 +1,1 @@
-try{
-
-} finally{
-
-}
+let arr = [1,2]
