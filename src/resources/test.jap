@@ -1,1 +1,2 @@
-let age =   "2" + 3
+let age =   "2"
+age !== 3

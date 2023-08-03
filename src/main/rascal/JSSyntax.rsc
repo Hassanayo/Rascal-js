@@ -75,7 +75,7 @@ syntax Exp
               )
               > right (
                   eqq: Exp lhs "===" Exp rhs
-                | neqq: Exp lhs "!===" Exp rhs
+                | neqq: Exp lhs "!==" Exp rhs
                 | eq: Exp lhs "==" Exp rhs
                 | neq: Exp lhs "!=" Exp rhs
               )
