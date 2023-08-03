@@ -11,6 +11,7 @@ data AType
           | nullType()
           | objectType()
           | undefinedType()
+          | voidType()
           ;
 
 str prettyAType(stringType()) = "string";
@@ -22,6 +23,8 @@ str prettyAType(undefinedType()) = "undefined";
 
 
 // Collecting
+
+
 void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
   collect(variableDecl, c);
 }
@@ -41,15 +44,18 @@ void collect(current: (VariableDecl) `<Id id> = <Exp exp>`, Collector c){
 void collect(current: (VariableDecl) `<Id id>`, Collector c){
   c.define("<id>", variableId(), id, defType(stringType()));
 }
-// void collect(current: (Initialize) `= <Exp exp>`, Collector c){
-//   c.define("<exp>", variableId(), exp, defType(exp));
-//   collect(exp, c);
-  
-// }
 
+// Parenthesis
+void collect(current: (Exp) `( <Exp e> )`, Collector c){
+  c.fact(current, e);
+  collect(e, c);
+}
+
+// check if variable exists
 void collect(current: (Exp) `<Id name>`, Collector c){
   c.use(name, {variableId()});
 }
+
 
 // check Exp
 void collect(current: (Exp) `<Integer number>`,  Collector c){
@@ -68,3 +74,23 @@ void collect(current: (Exp) `<Null null>`,  Collector c){
 // void collect(current: (Exp) `<Object object>`,  Collector c){
 //   c.fact(current, objectType());
 // }
+
+
+// OverloadAdding to handle multiple operators at once
+void overloadAdding(Exp current, str op, Exp exp1, Exp exp2, Collector c){
+  c.calculate("adding operator", current, [exp1, exp2], 
+    AType(Solver s) {
+      t1 = elimSubRangeType(s.getType(exp1));
+      t2 = elimSubRangeType(s.getType(exp2));
+
+      switch([t1,t2]) {
+        case [numberType(), numberType()]: return numberType();
+        case [stringType(), string()]: return stringType();
+        default: {
+          s.report(error(current, "%q is nt defined on %t and %t"));
+          return voidType();
+          }
+      }
+    });
+    collect(exp1, exp2, c);
+}

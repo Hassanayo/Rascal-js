@@ -49,6 +49,7 @@ syntax Exp
               | integer: Integer
               | string: String
               | boolean: Boolean
+              | bracket "(" Exp ")"
               | null: Null
               | array: "[" {Exp ","}* "]"
               | object: "{" {PropertyAssignment ","}* "}"
