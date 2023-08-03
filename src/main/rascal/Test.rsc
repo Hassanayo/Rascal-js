@@ -2,9 +2,15 @@ module Test
 
 import Checker;
 extend analysis::typepal::TestFramework;
-import ParseTree;
+import Parse;
+import JSSyntax;
+
+
+TModel calcTModelFromTree(Tree pt){
+    return collectAndSolve(pt);
+}
 
 TModel calcTModelFromStr(str text){
-    pt = parse(#start[Calc], text).top;
+    pt = parse(#start[Source], text).top;
     return calcTModelFromTree(pt);
 }

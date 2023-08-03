@@ -44,6 +44,8 @@ data Exp =
             var(str id)
           | integer(int number)
           | string(str text)
+          | boolean(bool b)
+          | null(str n)
           | array(list[Exp] arrayItems)
           | object(list[PropertyAssignment] objItems)
           | assign(Exp lhs, Exp rhs)

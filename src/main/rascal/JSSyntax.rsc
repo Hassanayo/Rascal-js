@@ -31,7 +31,7 @@ syntax Statement
     | continueLabel: "continue" ";"
 
     ;
-
+syntax NewStmt = "ayo" Id "-=" "5";
 syntax VariableStmt = variableStatement: Declarator {VariableDecl ","}+ ;
 syntax VariableDecl = varDeclaration: Id Initialize?;
 syntax Initialize = initialize: "=" Exp;
@@ -48,6 +48,8 @@ syntax Exp
               = var: Id
               | integer: Integer
               | string: String
+              | boolean: Boolean
+              | null: Null
               | array: "[" {Exp ","}* "]"
               | object: "{" {PropertyAssignment ","}* "}"
               > postIncr: Exp "++"
