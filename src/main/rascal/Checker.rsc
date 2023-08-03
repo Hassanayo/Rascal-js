@@ -12,6 +12,7 @@ data AType
           | objectType()
           | undefinedType()
           | voidType()
+          | NaNType()
           ;
 
 str prettyAType(stringType()) = "string";
@@ -20,6 +21,8 @@ str prettyAType(booleanType()) = "boolean";
 str prettyAType(nullType()) = "null";
 str prettyAType(objectType()) = "object";
 str prettyAType(undefinedType()) = "undefined";
+str prettyAType(voidType()) = "void";
+str prettyAType(NaNType()) = "NaN";
 
 
 // Collecting
@@ -76,21 +79,47 @@ void collect(current: (Exp) `<Null null>`,  Collector c){
 // }
 
 
-// OverloadAdding to handle multiple operators at once
-void overloadAdding(Exp current, str op, Exp exp1, Exp exp2, Collector c){
-  c.calculate("adding operator", current, [exp1, exp2], 
-    AType(Solver s) {
-      t1 = elimSubRangeType(s.getType(exp1));
-      t2 = elimSubRangeType(s.getType(exp2));
+// overloadAdding to handle multiple operators at once
+// void overloadAdding(Exp current, str op, Exp exp1, Exp exp2, Collector c){
+//   c.calculate("<op>", current, [exp1, exp2], 
+//     AType(Solver s) {
+//       t1 = s.getType(exp1);
+//       t2 = s.getType(exp2);
+
+//       switch([t1,t2]) {
+//         case [numberType(), numberType()]: return numberType();
+//         case [stringType(), stringType()]: return stringType();
+//         case [stringType(), numberType()]: return NaNType();
+//         case [numberType(), stringType()]: return NaNType();
+
+//         default: {
+//           s.report(error(current, "%q can not be defined on %t and %t", op, exp1, exp2));
+//           return voidType();
+//           }
+//       }
+//     });
+//     collect(exp1, exp2, c);
+// }
+
+// Check Addition
+void collect(current: (Exp) `<Exp exp1> + <Exp exp2>`, Collector c){
+  c.calculate("addition", current, [exp1, exp2],
+    AType(Solver s){
+      t1 = s.getType(exp1);
+      t2 = s.getType(exp2);
 
       switch([t1,t2]) {
         case [numberType(), numberType()]: return numberType();
-        case [stringType(), string()]: return stringType();
+        case [stringType(), stringType()]: return stringType();
+        case [stringType(), numberType()]: return stringType();
+        case [numberType(), stringType()]: return stringType();
+
         default: {
-          s.report(error(current, "%q is nt defined on %t and %t"));
+          s.report(error(current, "%q can not be defined on %t and %t", exp1, exp2));
           return voidType();
           }
       }
-    });
-    collect(exp1, exp2, c);
+    }
+  );
+  collect(exp1, exp2, c);
 }

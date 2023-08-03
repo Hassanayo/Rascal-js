@@ -1,1 +1,1 @@
-let age, height = 2
+let age =   "2" + 3
