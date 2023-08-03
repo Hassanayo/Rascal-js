@@ -14,3 +14,7 @@ TModel calcTModelFromStr(str text){
     pt = parse(#start[Source], text).top;
     return calcTModelFromTree(pt);
 }
+TModel calcTModelFromStr(loc text){
+    pt = parse(#start[Source], text).top;
+    return calcTModelFromTree(pt);
+}

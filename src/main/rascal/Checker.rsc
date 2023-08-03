@@ -37,6 +37,10 @@ void collect(current: (VariableDecl) `<Id id> = <Exp exp>`, Collector c){
   c.define("<id>", variableId(), id, defType(exp));
   collect(exp, c);
 }
+
+void collect(current: (VariableDecl) `<Id id>`, Collector c){
+  c.define("<id>", variableId(), id, defType(stringType()));
+}
 // void collect(current: (Initialize) `= <Exp exp>`, Collector c){
 //   c.define("<exp>", variableId(), exp, defType(exp));
 //   collect(exp, c);
