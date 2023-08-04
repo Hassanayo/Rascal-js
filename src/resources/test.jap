@@ -1,2 +1,4 @@
-let age = "2"
-age <= "e"
+let name = ""
+function Name(n){
+  name = "ayo"
+}

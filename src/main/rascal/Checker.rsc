@@ -13,7 +13,7 @@ data AType
           | undefinedType()
           | voidType()
           ;
-
+data ScopeRole = functionScope();
 str prettyAType(stringType()) = "string";
 str prettyAType(numberType()) = "number";
 str prettyAType(booleanType()) = "boolean";
@@ -25,6 +25,12 @@ str prettyAType(voidType()) = "void";
 
 // Collecting
 
+
+//statements
+
+void collect(current: (Statement) `<VariableStmt variableStmt>`, Collector c ){
+  collect(variableStmt, c);
+}
 
 void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
   collect(variableDecl, c);
@@ -206,4 +212,34 @@ void collect(current: (Exp) `<Exp exp1> % <Exp exp2>`, Collector c)
 void collect(current: (Exp) `<Exp exp1> %= <Exp exp2>`, Collector c)
     = overloadCombinedOperator(current, "%=", exp1, exp2, c);
 
+void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
+  collect(variableDecl, c);
+}
+
+data functionInfo = functionInfo(str name);
+// Function
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement* statement> }`, Collector c){
+  c.enterScope(current);
+    c.define("<name>", variableId(), name, defType(statement));
+    
+    c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
+    c.calculate("function type", current, [statement], 
+      AType(Solver s){
+        t1 = c.getType(statement);
+        switch([t1]){
+          case [numberType()]: return numberType();
+          case [stringType()]: return stringType();
+          case [objectType()]: return objectType();
+          case [booleanType()]: return booleanType();
+          case []: return voidType();
+
+        default: {
+          s.report(error(current, "%t", statement));
+          return voidType();
+          }
+        }
+    });
+    collect(statement, c);
+  c.leaveScope(current);
+}
 
