@@ -77,55 +77,14 @@ void collect(current: (Exp) `<Null null>`,  Collector c){
 // }
 
 
-// overloadAdding to handle multiple operators at once
-void overloadAdding(Exp current, str op, Exp exp1, Exp exp2, Collector c){
-  c.calculate("<op>", current, [exp1, exp2], 
+
+
+
+
+// overloadAddition
+void overloadAddition(Exp current, str op, Exp exp1, Exp exp2, Collector c){
+  c.calculate("Adding <op>", current, [exp1, exp2], 
     AType(Solver s) {
-      t1 = s.getType(exp1);
-      t2 = s.getType(exp2);
-
-      switch([t1,t2]) {
-        case [numberType(), numberType()]: return numberType();
-        case [stringType(), stringType()]: return stringType();
-        case [stringType(), numberType()]: return numberType();
-        case [numberType(), stringType()]: return numberType();
-
-        default: {
-          s.report(error(current, "%q can not be defined on %t and %t", op, exp1, exp2));
-          return voidType();
-          }
-      }
-    });
-    collect(exp1, exp2, c);
-}
-
-// overloadRelational to handle relational operators
-void overloadRelational(Exp current, str op, Exp exp1, Exp exp2, Collector c){
-  c.calculate("relational operator <op>", current, [exp1, exp2], 
-    AType(Solver s) {
-      t1 = s.getType(exp1);
-      t2 = s.getType(exp2);
-      switch([t1, t2]) {
-        case [numberType(), numberType()]: return numberType();
-        case [stringType(), stringType()]: return stringType();
-        case [stringType(), numberType()]: return numberType();
-        case [numberType(), stringType()]: return numberType();
-        default: {
-          s.report(error(current, "%q not defined on #t and %t", op, exp1, exp2));
-          return voidType();
-        }
-      }
-    }
-    );
-    collect(exp1, exp2, c);
-}
-
-// void collect(current: (Exp)`<Exp exp1> = <Exp exp2>`, Collector c) 
-//     = overloadAdding(current, "=", exp1, exp2, c);
-// Check Addition
-void collect(current: (Exp) `<Exp exp1> + <Exp exp2>`, Collector c){
-  c.calculate("addition", current, [exp1, exp2],
-    AType(Solver s){
       t1 = s.getType(exp1);
       t2 = s.getType(exp2);
 
@@ -136,21 +95,71 @@ void collect(current: (Exp) `<Exp exp1> + <Exp exp2>`, Collector c){
         case [numberType(), stringType()]: return stringType();
         case [objectType(), objectType()]: return stringType();
 
-
         default: {
-          s.report(error(current, "%q can not be defined on %t and %t", exp1, exp2));
+          s.report(error(current, "%q can not be defined on %t and %t", op, exp1, exp2));
           return voidType();
           }
       }
+    });
+    collect(exp1, exp2, c);
+}
+
+// overload function to operators except addition e.g *=, %=, -,/
+void overloadCombinedOperator(Exp current, str op, Exp exp1, Exp exp2, Collector c){
+  c.calculate("<op>", current, [exp1, exp2], 
+    AType(Solver s) {
+      t1 = s.getType(exp1);
+      t2 = s.getType(exp2);
+
+      switch([t1,t2]) {
+        case [numberType(), numberType()]: return numberType();
+
+        default: {
+          s.report(error(current, "%q can not be defined on %t and %t", op, exp1, exp2));
+          return voidType();
+          }
+      }
+    });
+    collect(exp1, exp2, c);
+}
+
+// overloadRelational to handle relational operators i.e booleans
+void overloadRelational(Exp current, str op, Exp exp1, Exp exp2, Collector c){
+  c.calculate("relational operator <op>", current, [exp1, exp2], 
+    AType(Solver s) {
+      t1 = s.getType(exp1);
+      t2 = s.getType(exp2);
+      switch([t1, t2]) {
+        case [numberType(), numberType()]: return booleanType();
+        case [stringType(), stringType()]: return booleanType();
+        case [booleanType(), booleanType()]: return booleanType();
+        case [nullType(), nullType()]: return booleanType();
+        case [undefinedType(), undefinedType()]: return booleanType();
+        case [objectType(), objectType()]: return booleanType();
+        default: {
+          s.report(error(current, "%q cannot be used on %t and %t", op, exp1, exp2));
+          return voidType();
+        }
+      }
     }
-  );
-  collect(exp1, exp2, c);
+    );
+    collect(exp1, exp2, c);
 }
 
 
-// relational operators
+
+// wrong: dont use overloadRelational for =
 void collect(current: (Exp) `<Exp exp1> = <Exp exp2>`, Collector c)
     = overloadRelational(current, "=", exp1, exp2, c);
+
+
+
+
+void collect(current: (Exp) `<Exp exp1> + <Exp exp2>`, Collector c)
+    = overloadAddition(current, "+", exp1, exp2, c);
+void collect(current: (Exp) `<Exp exp1> += <Exp exp2>`, Collector c)
+    = overloadAddition(current, "+=", exp1, exp2, c);
+
 void collect(current: (Exp) `<Exp exp1> != <Exp exp2>`, Collector c)
     = overloadRelational(current, "!=", exp1, exp2, c);
 
@@ -171,6 +180,30 @@ void collect(current: (Exp) `<Exp exp1> \< <Exp exp2>`, Collector c)
 
 void collect(current: (Exp) `<Exp exp1> \>= <Exp exp2>`, Collector c)
     = overloadRelational(current, "\>=", exp1, exp2, c);
-    
+
 void collect(current: (Exp) `<Exp exp1> \<= <Exp exp2>`, Collector c)
     = overloadRelational(current, "\<=", exp1, exp2, c);
+
+
+
+void collect(current: (Exp) `<Exp exp1> - <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "-", exp1, exp2, c);
+void collect(current: (Exp) `<Exp exp1> -= <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "-=", exp1, exp2, c);
+
+void collect(current: (Exp) `<Exp exp1> * <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "*", exp1, exp2, c);
+void collect(current: (Exp) `<Exp exp1> *= <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "*=", exp1, exp2, c);
+
+void collect(current: (Exp) `<Exp exp1> / <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "/", exp1, exp2, c);
+void collect(current: (Exp) `<Exp exp1> /= <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "/=", exp1, exp2, c);
+
+void collect(current: (Exp) `<Exp exp1> % <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "%", exp1, exp2, c);
+void collect(current: (Exp) `<Exp exp1> %= <Exp exp2>`, Collector c)
+    = overloadCombinedOperator(current, "%=", exp1, exp2, c);
+
+

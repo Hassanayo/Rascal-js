@@ -1,2 +1,2 @@
-let age =   "2"
-age !== 3
+let age = "2"
+age <= "e"
