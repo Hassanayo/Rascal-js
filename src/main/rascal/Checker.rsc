@@ -218,19 +218,20 @@ void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, C
 
 data functionInfo = functionInfo(str name);
 // Function
-void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement* statement> }`, Collector c){
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement statement> }`, Collector c){
   c.enterScope(current);
     c.define("<name>", variableId(), name, defType(statement));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
-    c.calculate("function type", current, [statement], 
+    c.calculate("function", current, [statement], 
       AType(Solver s){
-        t1 = c.getType(statement);
+        t1 = s.getType(statement);
         switch([t1]){
           case [numberType()]: return numberType();
           case [stringType()]: return stringType();
           case [objectType()]: return objectType();
           case [booleanType()]: return booleanType();
+          case [nullType()]: return nullType();
           case []: return voidType();
 
         default: {
@@ -242,4 +243,5 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <S
     collect(statement, c);
   c.leaveScope(current);
 }
+
 
