@@ -32,6 +32,7 @@ void collect(current: (Statement) `<VariableStmt variableStmt>`, Collector c ){
   collect(variableStmt, c);
 }
 
+
 void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
   collect(variableDecl, c);
 }
@@ -218,14 +219,15 @@ void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, C
 
 data functionInfo = functionInfo(str name);
 // Function
-void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement statement> }`, Collector c){
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement* statement> }`, Collector c){
   c.enterScope(current);
     c.define("<name>", variableId(), name, defType(statement));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
-    c.calculate("function", current, [statement], 
+    for(stm <- statement){
+      c.calculate("function", current, [stm], 
       AType(Solver s){
-        t1 = s.getType(statement);
+        t1 = s.getType(stm);
         switch([t1]){
           case [numberType()]: return numberType();
           case [stringType()]: return stringType();
@@ -235,11 +237,14 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <S
           case []: return voidType();
 
         default: {
-          s.report(error(current, "%t", statement));
+          s.report(error(current, "%t", stm));
           return voidType();
           }
         }
     });
+
+    };
+    
     collect(statement, c);
   c.leaveScope(current);
 }
