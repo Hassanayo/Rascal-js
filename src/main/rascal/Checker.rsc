@@ -32,6 +32,16 @@ void collect(current: (Statement) `<VariableStmt variableStmt>`, Collector c ){
   collect(variableStmt, c);
 }
 
+void collect(current: (Statement) `<Exp exp>`, Collector c){
+  collect(exp, c);
+}
+void collect(current: (Statement) `<Function function>`, Collector c){
+  collect(function, c);
+}
+
+
+
+
 
 void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
   collect(variableDecl, c);
@@ -217,6 +227,18 @@ void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, C
   collect(variableDecl, c);
 }
 
+
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) {  }`, Collector c){
+  c.enterScope(current);
+    c.define("<name>", variableId(), name, defType(voidType()));
+    
+    c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
+    
+  
+  c.leaveScope(current);
+}
+
+
 data functionInfo = functionInfo(str name);
 // Function
 void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement* statement> }`, Collector c){
@@ -224,6 +246,7 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <S
     c.define("<name>", variableId(), name, defType(statement));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
+    
     for(stm <- statement){
       c.calculate("function", current, [stm], 
       AType(Solver s){
@@ -248,5 +271,7 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <S
     collect(statement, c);
   c.leaveScope(current);
 }
+
+
 
 
