@@ -1,4 +1,2 @@
-let name = ""
-function Name(n){
-  let age = 20
-}
+var age = 4
+age = "1"

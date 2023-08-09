@@ -63,6 +63,15 @@ void collect(current: (VariableDecl) `<Id id>`, Collector c){
   c.define("<id>", variableId(), id, defType(stringType()));
 }
 
+
+
+void collect(current: (Exp) `<Exp exp1> = <Exp exp2>`, Collector c){
+  c.use(exp1, {variableId()});
+  c.requireEqual(exp1, exp2, error(current, "Lhs %t should have the same type as Rhs", exp1));
+  collect(exp2, c);
+}
+
+
 // Parenthesis
 void collect(current: (Exp) `( <Exp e> )`, Collector c){
   c.fact(current, e);
@@ -165,9 +174,6 @@ void overloadRelational(Exp current, str op, Exp exp1, Exp exp2, Collector c){
 
 
 
-// wrong: dont use overloadRelational for =
-void collect(current: (Exp) `<Exp exp1> = <Exp exp2>`, Collector c)
-    = overloadRelational(current, "=", exp1, exp2, c);
 
 
 
@@ -246,7 +252,6 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <S
     c.define("<name>", variableId(), name, defType(statement));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
-    
     for(stm <- statement){
       c.calculate("function", current, [stm], 
       AType(Solver s){
