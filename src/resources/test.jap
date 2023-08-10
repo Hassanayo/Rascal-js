@@ -1,2 +1,5 @@
-var age = 4
-age = "1"
+function Department(){
+  let name = 2
+  name = 3
+  return name
+}

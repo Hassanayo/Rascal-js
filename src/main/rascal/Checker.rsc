@@ -28,16 +28,6 @@ str prettyAType(voidType()) = "void";
 
 //statements
 
-void collect(current: (Statement) `<VariableStmt variableStmt>`, Collector c ){
-  collect(variableStmt, c);
-}
-
-void collect(current: (Statement) `<Exp exp>`, Collector c){
-  collect(exp, c);
-}
-void collect(current: (Statement) `<Function function>`, Collector c){
-  collect(function, c);
-}
 
 
 
@@ -229,9 +219,8 @@ void collect(current: (Exp) `<Exp exp1> % <Exp exp2>`, Collector c)
 void collect(current: (Exp) `<Exp exp1> %= <Exp exp2>`, Collector c)
     = overloadCombinedOperator(current, "%=", exp1, exp2, c);
 
-void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
-  collect(variableDecl, c);
-}
+
+
 
 
 void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) {  }`, Collector c){
@@ -247,36 +236,32 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) {  }
 
 data functionInfo = functionInfo(str name);
 // Function
-void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Statement* statement> }`, Collector c){
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Body body> }`, Collector c){
   c.enterScope(current);
-    c.define("<name>", variableId(), name, defType(statement));
+    c.define("<name>", variableId(), name, defType(body));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
-    for(stm <- statement){
-      c.calculate("function", current, [stm], 
-      AType(Solver s){
-        t1 = s.getType(stm);
-        switch([t1]){
-          case [numberType()]: return numberType();
-          case [stringType()]: return stringType();
-          case [objectType()]: return objectType();
-          case [booleanType()]: return booleanType();
-          case [nullType()]: return nullType();
-          case []: return voidType();
-
-        default: {
-          s.report(error(current, "%t", stm));
-          return voidType();
-          }
-        }
-    });
-
-    };
     
-    collect(statement, c);
+
+    
+    collect(body, c);
   c.leaveScope(current);
 }
 
+void collect(current: (Body) `<Statement* statement> <ReturnExp returnExp>`, Collector c){
+  c.fact(current, returnExp);
+  collect(statement, returnExp, c);
+}
+void collect(current: (Statement) `<Exp exp>`, Collector c){
+  c.fact(current, exp);
+  collect(exp, c);
+}
 
-
-
+void collect(current: (ReturnExp) `return <Exp exp>`, Collector c){
+  c.fact(current, exp);
+  collect(exp, c);
+}
+void collect(current: (Statement) `throw <Exp exp>`, Collector c){
+  c.fact(current, exp);
+  collect(exp, c);
+}
