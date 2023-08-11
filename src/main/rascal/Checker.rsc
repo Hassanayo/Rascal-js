@@ -236,7 +236,7 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) {  }
 
 data functionInfo = functionInfo(str name);
 // Function
-void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Body body> }`, Collector c){
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <FunctionBody body> }`, Collector c){
   c.enterScope(current);
     c.define("<name>", variableId(), name, defType(body));
     
@@ -248,7 +248,7 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <B
   c.leaveScope(current);
 }
 
-void collect(current: (Body) `<Statement* statement> <ReturnExp returnExp>`, Collector c){
+void collect(current: (FunctionBody) `<Statement* statement> <ReturnExp returnExp>`, Collector c){
   c.fact(current, returnExp);
   collect(statement, returnExp, c);
 }

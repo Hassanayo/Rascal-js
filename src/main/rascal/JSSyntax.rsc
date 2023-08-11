@@ -23,7 +23,7 @@ syntax Statement
     | tryFinally: "try" "{" Statement* "}" "finally" "{" Statement* "}"
 
     // ambiguity issue
-    | tryCatchFinally: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}" catchBody "finally"  Statement*  finallyBody
+    | tryCatchFinally: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}" catchBody "finally" "{" Statement* "}" finallyBody
 
     // | returnExp: "return" Exp
     | throwExp: "throw" Exp
@@ -38,14 +38,14 @@ syntax Initialize = initialize: "=" Exp;
 
 // add an optional return stmt
 syntax Function = 
-                function: "function" Id name "(" {Id ","}* parameters ")" "{" Body "}"
+                function: "function" Id name "(" {Id ","}* parameters ")" "{" FunctionBody "}"
                 // | Declarator Id name "=" "(" {Id ","}* parameters ")" "=\>" "{" Statement* statements  "}"  "(" {Id ","}* parameters ")" "{" Statement* statements "}"
                 ;
 
 
-syntax Body = body: Statement* statement ReturnExp?;
+syntax FunctionBody = functionBody: Statement* statement ReturnExp?;
 
-syntax ReturnExp = "return" Exp;
+syntax ReturnExp = returnExp: "return" Exp;
 syntax PropertyAssignment = propertyAssgn: Exp ":" Exp;
 syntax CaseStatement = caseOf: "case" Exp ":" Statement*
                     |  defaultCase: "default" ":" Statement*;

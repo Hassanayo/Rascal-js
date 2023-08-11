@@ -26,14 +26,16 @@ data Statement = varStmt(VariableStmt varSmt)
                 
                 | breakLabel()
                 | continueLabel()
-                | returnExp(Exp retExp)
+                // | returnExp(Exp retExp)
                 | throwExp(Exp thrwExp)
                 ;
                 
 data VariableStmt = variableStatement(str declarator, list[VariableDecl] vdecl);
 data VariableDecl = varDeclaration(str id, list[Initialize] init);
 data Initialize = initialize(Exp intexp);
-data Function = function(str funcid, list[str] funcparams, list[Statement] funcBody);
+data Function = function(str funcid, list[str] funcparams, FunctionBody funcBody);
+data FunctionBody = functionBody(list[Statement] statements, list[ReturnExp] returnExp);
+data ReturnExp = returnExp(Exp exp);
 data PropertyAssignment = propertyAssgn(str lhs, Exp rhs);
 data CaseStatement =  
                       caseOf(Exp exp, list[Statement] caseBody)

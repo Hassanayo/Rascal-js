@@ -1,5 +1,7 @@
-function Department(){
-  let name = 2
-  name = 3
-  return name
+try{
+
+} catch(e){
+
+} finally {
+  
 }

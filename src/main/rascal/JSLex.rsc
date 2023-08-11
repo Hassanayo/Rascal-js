@@ -43,5 +43,8 @@ keyword ReservedKeywords
                 | "catch"               
                 | "import" 
                 | "function" 
+                | "while" 
+                | "do" 
+                | "finally" 
                 ;
 
