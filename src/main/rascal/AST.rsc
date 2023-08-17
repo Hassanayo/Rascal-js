@@ -12,16 +12,17 @@ data Statement = varStmt(VariableStmt varSmt)
                 | function(Function function)
 
                 // control statements
-                | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, list[Statement] forbody)
-                | forIn(VariableStmt stmt, Exp exp, list[Statement] forinstmt )
-                | whileLoop(Exp exp, list[Statement] whilebody)
-                | doWhile(list[Statement] doStmt, Exp exp)
+                | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, Body forbody)
+                | forIn(VariableStmt stmt, Exp exp, Body forinstmt )
+                | whileLoop(Exp exp, Body whilebody)
+                | doWhile(Body doStmt, Exp exp)
                 | ifThen(Exp exp, Statement ifstmt)
-                | ifElse(Exp exp, Statement ifstmt, list[Statement] elsestmt)
+                | ifElse(Exp exp, Statement ifstmt, Body elsestmt)
                 | switchCase(Exp exp, list[CaseStatement] caseStmt)
 
-                | tryCatch(list[Statement] tryStmt, str id, list[Statement] catchStmt)
-                | tryFinally(list[Statement] tryStmt, list[Statement] finallyStmt)
+                | tryCatch(Body tryStmt, str id, Body catchStmt)
+                | tryFinally(Body tryStmt, Body finallyStmt)
+                | tryCatchFinally(Body tryStmt, str id, Body catchStmt, Body finallyStmt)
 
                 
                 | breakLabel()
@@ -33,8 +34,8 @@ data Statement = varStmt(VariableStmt varSmt)
 data VariableStmt = variableStatement(str declarator, list[VariableDecl] vdecl);
 data VariableDecl = varDeclaration(str id, list[Initialize] init);
 data Initialize = initialize(Exp intexp);
-data Function = function(str funcid, list[str] funcparams, FunctionBody funcBody);
-data FunctionBody = functionBody(list[Statement] statements, list[ReturnExp] returnExp);
+data Function = function(str funcid, list[str] funcparams, Body funcBody);
+data Body = body(list[Statement] statements, list[ReturnExp] returnExp);
 data ReturnExp = returnExp(Exp exp);
 data PropertyAssignment = propertyAssgn(str lhs, Exp rhs);
 data CaseStatement =  

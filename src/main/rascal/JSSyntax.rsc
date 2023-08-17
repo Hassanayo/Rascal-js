@@ -11,23 +11,22 @@ syntax Statement
     | function: Function function
 
     // control statements
-    | forLoop: "for" "(" VariableStmt init ";" Exp cond ";" Exp cond ")" "{" Statement* "}" forBody
-    | forIn: "for" "(" VariableStmt "in" Exp ")" "{" Statement* "}"
-    | whileLoop: "while" "(" Exp ")" "{" Statement* "}" 
-    | doWhile: "do" "{" Statement* "}" "while" "(" Exp ")"
-    | ifThen: "if" "(" Exp cond ")" "{" Statement "}"  () !>> "else"
-    | ifElse: "if" "(" Exp cond ")" "{" Statement "}"  () "else" "{" Statement* "}" elseBody
+    | forLoop: "for" "(" VariableStmt init ";" Exp cond ";" Exp cond ")" "{" Body "}" forBody
+    | forIn: "for" "(" VariableStmt "in" Exp ")" "{" Body "}"
+    | whileLoop: "while" "(" Exp ")" "{" Body "}" 
+    | doWhile: "do" "{" Body "}" "while" "(" Exp ")"
+    | ifThen: "if" "(" Exp cond ")" "{" Body "}"  () !>> "else"
+    | ifElse: "if" "(" Exp cond ")" "{" Body "}"  () "else" "{" Body "}" elseBody
     | switchCase: "switch" "(" Exp ")" "{" CaseStatement* "}"
     
-    | tryCatch: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}"
-    | tryFinally: "try" "{" Statement* "}" "finally" "{" Statement* "}"
-
-    // ambiguity issue
-    | tryCatchFinally: "try" "{" Statement* "}" "catch" "(" Id ")" "{" Statement* "}" catchBody "finally" "{" Statement* "}" finallyBody
+    | tryCatch: "try" "{" Body "}" "catch" "(" Id ")" "{" Body "}"
+    | tryFinally: "try" "{" Body "}" "finally" "{" Body "}"
+    | tryCatchFinally: "try" "{" Body "}" "catch" "(" Id ")" "{" Body "}" catchBody "finally" "{" Body "}" finallyBody
 
     // | returnExp: "return" Exp
     | throwExp: "throw" Exp
     | breakLabel: "break" ";"
+    | breakLabelExp: "break" Exp";"
     | continueLabel: "continue" ";"
 
     ;
@@ -38,12 +37,12 @@ syntax Initialize = initialize: "=" Exp;
 
 // add an optional return stmt
 syntax Function = 
-                function: "function" Id name "(" {Id ","}* parameters ")" "{" FunctionBody "}"
+                function: "function" Id name "(" {Id ","}* parameters ")" "{" Body "}"
                 // | Declarator Id name "=" "(" {Id ","}* parameters ")" "=\>" "{" Statement* statements  "}"  "(" {Id ","}* parameters ")" "{" Statement* statements "}"
                 ;
 
 
-syntax FunctionBody = functionBody: Statement* statement ReturnExp?;
+syntax Body = body: Statement* statement ReturnExp?;
 
 syntax ReturnExp = returnExp: "return" Exp;
 syntax PropertyAssignment = propertyAssgn: Exp ":" Exp;

@@ -1,7 +1,6 @@
-try{
-
-} catch(e){
-
-} finally {
+let name = 5
+if(name == 2){
+  name = 2
+} else{
   
 }

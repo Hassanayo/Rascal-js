@@ -13,7 +13,8 @@ data AType
           | undefinedType()
           | voidType()
           ;
-data ScopeRole = functionScope();
+data ScopeRole = functionScope()
+              | loopScope();
 str prettyAType(stringType()) = "string";
 str prettyAType(numberType()) = "number";
 str prettyAType(booleanType()) = "boolean";
@@ -236,21 +237,23 @@ void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) {  }
 
 data functionInfo = functionInfo(str name);
 // Function
-void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <FunctionBody body> }`, Collector c){
+void collect(current: (Function) `function <Id name> ( <{Id ","}* params> ) { <Body body> }`, Collector c){
   c.enterScope(current);
     c.define("<name>", variableId(), name, defType(body));
     
     c.setScopeInfo(c.getScope(), functionScope(), functionInfo("<name>"));
-    
-
-    
+  
     collect(body, c);
   c.leaveScope(current);
 }
 
-void collect(current: (FunctionBody) `<Statement* statement> <ReturnExp returnExp>`, Collector c){
+void collect(current: (Body) `<Statement* statement> <ReturnExp returnExp>`, Collector c){
   c.fact(current, returnExp);
   collect(statement, returnExp, c);
+}
+void collect(current: (Body) `<Statement* statement>`, Collector c){
+  c.fact(current, voidType());
+  collect(statement, c);
 }
 void collect(current: (Statement) `<Exp exp>`, Collector c){
   c.fact(current, exp);
@@ -264,4 +267,71 @@ void collect(current: (ReturnExp) `return <Exp exp>`, Collector c){
 void collect(current: (Statement) `throw <Exp exp>`, Collector c){
   c.fact(current, exp);
   collect(exp, c);
+}
+
+//Loops
+data LoopInfo = loopInfo(str name);
+
+void collect(current: (Statement)`for ( <VariableStmt varStmt> ; <Exp exp1> ; <Exp exp2> ) { <Statement* statement> }`, Collector c){
+  c.enterScope(current);
+    loopName = "forLoop";
+    c.setScopeInfo(c.getScope(), loopScope(), loopInfo(loopName));
+  c.leaveScope(current);
+}
+
+void collect(current: (Statement)`for ( <VariableStmt varStmt> in <Exp exp>) { <Statement* statement> }`, Collector c){
+  c.enterScope(current);
+    loopName = "forLoop";
+    c.setScopeInfo(c.getScope(), loopScope(), loopInfo(loopName));
+  c.leaveScope(current);
+}
+
+void collect(current: (Statement)`while ( <Exp exp> ) { <Statement* statement> }`, Collector c){
+  c.enterScope(current);
+    loopName = "whileLoop";
+    c.setScopeInfo(c.getScope(), loopScope(), loopInfo(loopName));
+  c.leaveScope(current);
+}
+
+void collect(current: (Statement)`do { <Statement* statement> } while ( <Exp exp> )`, Collector c){
+  c.enterScope(current);
+    loopName = "whileLoop";
+    c.setScopeInfo(c.getScope(), loopScope(), loopInfo(loopName));
+  c.leaveScope(current);
+}
+
+
+
+// void collect(current:(Statement) `break <Exp exp>;`, Collector c){
+//     loopName = "<exp>";
+//     for(<scope, scopeInfo> <- c.getScopeInfo(loopScope())){       
+//         if(loopInfo("whileLoop") := scopeInfo){
+//             if(loopName == "" || loopName == "whileLoop"){
+//                 collect(exp, c);
+//                 return;
+//              }
+//         } else {
+//             throw rascalCheckerInternalError(getLoc(current), "Inconsistent info from loop scope: <scopeInfo>");
+//         }
+//     }
+//     c.report(error(current, "Break outside a while/do/for statement"));
+// }
+
+// conditionals
+void collect(current:(Statement) `if ( <Exp cond> ) { <Body thenPart> }`, Collector c){
+  c.calculate("if", current, [cond, thenPart],
+  AType(Solver s){
+    s.requireEqual(cond, booleanType(), error(current, "Condition should be of type `bool`, found %t", cond));
+    return s.getType(thenPart);
+  });
+  collect(cond, thenPart, c);
+}
+void collect(current:(Statement) `if ( <Exp cond> ) { <Body thenPart> } else { <Body elsePart> }`, Collector c){
+  c.calculate("ifelse", current, [cond, thenPart],
+  AType(Solver s){
+    s.requireEqual(cond, booleanType(), error(current, "Condition should be of type `bool`, found %t", cond));
+    s.requireEqual(thenPart, elsePart, error(current, "thenPart and elsePart should have same type"));
+    return s.getType(thenPart);
+  });
+  collect(cond, thenPart, elsePart, c);
 }
