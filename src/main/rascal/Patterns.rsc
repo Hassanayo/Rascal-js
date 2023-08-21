@@ -1,3 +1,0 @@
-module Patterns
-
-import IO;

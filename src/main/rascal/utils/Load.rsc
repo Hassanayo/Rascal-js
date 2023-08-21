@@ -1,4 +1,4 @@
-module Load
+module utils::Load
 
 import JSSyntax;
 import AST;

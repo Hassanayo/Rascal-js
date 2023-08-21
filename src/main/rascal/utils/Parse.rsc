@@ -1,4 +1,4 @@
-module Parse
+module utils::Parse
 
 import JSSyntax;
 import ParseTree;

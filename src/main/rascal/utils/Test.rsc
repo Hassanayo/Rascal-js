@@ -1,4 +1,4 @@
-module Test
+module utils::Test
 
 import Checker;
 extend analysis::typepal::TestFramework;

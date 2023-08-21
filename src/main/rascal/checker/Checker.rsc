@@ -1,4 +1,4 @@
-module Checker
+module checker::Checker
 
 import JSSyntax;
 extend analysis::typepal::TypePal;
@@ -25,13 +25,6 @@ str prettyAType(voidType()) = "void";
 
 
 // Collecting
-
-
-//statements
-
-
-
-
 
 
 void collect(current: (VariableStmt) `var <{VariableDecl ","}+ variableDecl>`, Collector c){
