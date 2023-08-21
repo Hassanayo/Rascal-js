@@ -1,3 +1,4 @@
-function Name(n){
-  
-}
+function Tester(n){
+  let number = (57 + 4) * n
+  return number
+} 

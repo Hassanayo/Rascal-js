@@ -53,7 +53,7 @@ syntax Exp
               | integer: Integer
               | string: String
               | boolean: Boolean
-              | bracket "(" Exp ")"
+              | \bracket: "(" Exp ")"
               | null: Null
               | array: "[" {Exp ","}* "]"
               | object: "{" {PropertyAssignment ","}* "}"

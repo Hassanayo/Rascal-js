@@ -7,29 +7,29 @@ data Source = source(list[Statement] statements);
 
 
 data Statement =
-                //  varStmt(VariableStmt varSmt)
-                // | expression(Exp newexp)
-                // | block(list[Statement] blockStmt)
-                 function(Function function)
+                 varStmt(VariableStmt varSmt)
+                | expression(Exp newexp)
+                | block(list[Statement] blockStmt)
+                | function(Function function)
 
                 // control statements
-                // | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, Body forbody)
-                // | forIn(VariableStmt stmt, Exp exp, Body forinstmt )
-                // | whileLoop(Exp exp, Body whilebody)
-                // | doWhile(Body doStmt, Exp exp)
-                // | ifThen(Exp exp, Statement ifstmt)
-                // | ifElse(Exp exp, Statement ifstmt, Body elsestmt)
-                // | switchCase(Exp exp, list[CaseStatement] caseStmt)
+                | forLoop(VariableStmt stmt, Exp midexp, Exp lastexp, Body forbody)
+                | forIn(VariableStmt stmt, Exp exp, Body forinstmt )
+                | whileLoop(Exp exp, Body whilebody)
+                | doWhile(Body doStmt, Exp exp)
+                | ifThen(Exp exp, Statement ifstmt)
+                | ifElse(Exp exp, Statement ifstmt, Body elsestmt)
+                | switchCase(Exp exp, list[CaseStatement] caseStmt)
 
-                // | tryCatch(Body tryStmt, str id, Body catchStmt)
-                // | tryFinally(Body tryStmt, Body finallyStmt)
-                // | tryCatchFinally(Body tryStmt, str id, Body catchStmt, Body finallyStmt)
+                | tryCatch(Body tryStmt, str id, Body catchStmt)
+                | tryFinally(Body tryStmt, Body finallyStmt)
+                | tryCatchFinally(Body tryStmt, str id, Body catchStmt, Body finallyStmt)
 
                 
-                // | breakLabel()
-                // | continueLabel()
-                // // | returnExp(Exp retExp)
-                // | throwExp(Exp thrwExp)
+                | breakLabel()
+                | continueLabel()
+                // | returnExp(Exp retExp)
+                | throwExp(Exp thrwExp)
                 ;
                 
 data VariableStmt = variableStatement(str declarator, list[VariableDecl] vdecl);
@@ -49,6 +49,7 @@ data Exp =
           | integer(int number)
           | string(str text)
           | boolean(bool b)
+          | \bracket(Exp exp)
           | null(str n)
           | array(list[Exp] arrayItems)
           | object(list[PropertyAssignment] objItems)
@@ -71,4 +72,14 @@ data Exp =
           | neqq(Exp nlhs, Exp nrhs)
           | eq(Exp nlhs, Exp nrhs)
           | neq(Exp nlhs, Exp nrhs)
+          ;
+
+data AType 
+          = stringType()
+          | numberType()
+          | booleanType()
+          | nullType()
+          | objectType()
+          | undefinedType()
+          | voidType()
           ;

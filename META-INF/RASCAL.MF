@@ -2,7 +2,7 @@ Manifest-Version: 0.0.1
 Project-Name: rascal-js
 Source: src/main/rascal
 Require-Libraries: |lib://rascal-lsp/|
-Main-Function: main 
-Main-Module: VSMain
+Main-Function: setupIDE 
+Main-Module: LanguageServer
 
 

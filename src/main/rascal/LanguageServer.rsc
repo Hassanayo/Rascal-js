@@ -5,7 +5,7 @@ import ParseTree;
 import util::Reflective;
 import util::LanguageServer;
 import JSSyntax;
-import Implode;
+import utils::Implode;
 import Prelude;
 
 import compile::Js2Py;
@@ -24,16 +24,14 @@ rel[loc, Command] sourceLenses(start[Source] input)
   };
 
 
-
-
-public void generatePython(start[Source] pt, loc l){
+public void generatePython(start[Source] pt){
   for (<name, class> <- js2py(implode(pt.top))) {
 		writeFile(|project://rascal-js/output/<name>.py|, class);
 	}
 }
 
 value hqlCommandHandler(translateToPython(start[Source] input)){
-  generatePython(input, input@\loc);
+  generatePython(input);
   return ("result" : true);
 }
 
