@@ -1,4 +1,4 @@
 function Tester(n){
-  let number = (57 + 4) * n
+  let number = (20 + 10)
   return number
-} 
+}

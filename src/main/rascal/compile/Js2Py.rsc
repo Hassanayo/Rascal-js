@@ -7,6 +7,16 @@ public rel[str, str] js2py(Source es){
   return { <"output", initiate(e)> | e <- es.statements };
 }
 
+
+// use comprehensions for the problem
+// int countAssignments(PROGRAM P){
+//     int n = 0;
+//     visit (P){
+//     case asgStat(_, _):
+//          n += 1;
+//     }
+//     return n;
+// }
 public str initiate(Statement e){
   switch(e) {
         case varStmt(VariableStmt varSmt): return statement2Declaration(varSmt);

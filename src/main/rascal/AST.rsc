@@ -2,6 +2,8 @@ module AST
 
 import JSSyntax;
 
+// try out Exprwssion* for some lists
+// visit: Especially collecting information from abstract syntax trees and parse trees is common
 
 data Source = source(list[Statement] statements);
 

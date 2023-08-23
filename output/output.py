@@ -1,3 +1,5 @@
-def Tester(n):            
-  number = 57 + 4 * n         
+def Tester(n):
+              
+  number = 20 + a
+          
   return number

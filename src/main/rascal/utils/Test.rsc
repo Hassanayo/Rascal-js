@@ -1,8 +1,8 @@
 module utils::Test
 
-import Checker;
+import checker::Checker;
 extend analysis::typepal::TestFramework;
-import Parse;
+import utils::Parse;
 import JSSyntax;
 
 
